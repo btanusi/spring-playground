@@ -28,4 +28,10 @@ class DemoApplicationTests {
 		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("3.141592653589793"));
 	}
 
+	@Test
+	public void testGetMathCalculate() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.get("/math/calculate?operation=add&x=4&y=6");
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("4 + 6 = 10"));
+	}
+
 }
