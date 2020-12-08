@@ -84,7 +84,7 @@ class DemoApplicationTests {
 	}
 
 	@Test
-	public void testMathArea() throws Exception {
+	public void testMathAreaCircle() throws Exception {
 		RequestBuilder request = MockMvcRequestBuilders.post("/math/area")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("type", "circle")
