@@ -74,7 +74,7 @@ public class HelloController {
     }
 
     @RequestMapping("/math/volume/{length}/{width}/{height}")
-    public String getMathSum(@PathVariable Integer length, @PathVariable Integer width, @PathVariable Integer height) {
+    public String getMathVolume(@PathVariable Integer length, @PathVariable Integer width, @PathVariable Integer height) {
         Integer volume = length * width * height;
         return "The volume of a " + length.toString() + "x" + width.toString() + "x" + height.toString() + " rectangle is " + volume.toString();
     }
