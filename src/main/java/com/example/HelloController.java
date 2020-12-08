@@ -4,7 +4,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class HelloController {
@@ -77,6 +79,26 @@ public class HelloController {
     public String getMathVolume(@PathVariable Integer length, @PathVariable Integer width, @PathVariable Integer height) {
         Integer volume = length * width * height;
         return "The volume of a " + length.toString() + "x" + width.toString() + "x" + height.toString() + " rectangle is " + volume.toString();
+    }
+
+    @PostMapping("/math/area")
+    public String postMathArea(@RequestParam Map<String, String> body) {
+        String retType, retArea;
+        Double area;
+        String type = body.get("type");
+        //if(type.equals("circle")){
+            String radius = body.get("radius");
+            if(radius == null){
+                return "Invalid";
+            } else {
+                Integer r = Integer.parseInt(radius);
+                area = (Double.parseDouble(getPi()) * r * r);
+                area = Math.round(area * 100000.0) / 100000.0;
+                retType = "circle with a radius of " + radius;
+                retArea = area.toString();
+            }
+        //}
+        return "Area of a " + retType + " is " + retArea;
     }
 
 }
