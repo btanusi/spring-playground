@@ -70,4 +70,16 @@ class DemoApplicationTests {
 		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("The volume of a 3x4x5 rectangle is 60"));
 	}
 
+	@Test
+	public void testPostMathVolume() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.post("/math/volume/3/4/5");
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("The volume of a 3x4x5 rectangle is 60"));
+	}
+
+	@Test
+	public void testPatchMathVolume() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.patch("/math/volume/3/4/5");
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("The volume of a 3x4x5 rectangle is 60"));
+	}
+
 }
