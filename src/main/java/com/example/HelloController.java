@@ -28,4 +28,9 @@ public class HelloController {
         return "You just POSTed to /tasks";
     }
 
+    @GetMapping("/math/pi")
+    public String getPi() {
+        return "3.141592653589793";
+    }
+
 }
