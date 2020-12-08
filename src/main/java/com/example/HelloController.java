@@ -1,10 +1,14 @@
 package com.example.demo;
 
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 public class HelloController {
@@ -51,6 +55,26 @@ public class HelloController {
             result = x / y;
         }
         return x.toString() + " " + operation + " " + y.toString() + " = " + result.toString();
+    }
+
+    @GetMapping("/math/sum")
+    public String getMathCalculate(@RequestParam MultiValueMap<String, String> params) {
+        Integer sum = 0;
+        String retStr = "";
+        Collection<List<String>> values = params.values();
+        for(List<String> n_value : values){
+            for (int i = 0; i < n_value.size(); i++){
+                String v = n_value.get(i);
+                sum += Integer.parseInt(v);
+                retStr += v;
+                if (i+1 == n_value.size()){
+                    retStr += " = ";
+                } else {
+                    retStr += " + ";
+                }
+            }
+        }
+        return retStr + sum.toString();
     }
 
 }
