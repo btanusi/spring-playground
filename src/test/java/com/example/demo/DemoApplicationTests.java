@@ -29,9 +29,27 @@ class DemoApplicationTests {
 	}
 
 	@Test
-	public void testGetMathCalculate() throws Exception {
+	public void testGetMathCalculateAdd() throws Exception {
 		RequestBuilder request = MockMvcRequestBuilders.get("/math/calculate?operation=add&x=4&y=6");
 		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("4 + 6 = 10"));
+	}
+
+	@Test
+	public void testGetMathCalculateMultiply() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.get("/math/calculate?operation=multiply&x=4&y=6");
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("4 * 6 = 24"));
+	}
+
+	@Test
+	public void testGetMathCalculateSubtract() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.get("/math/calculate?operation=subtract&x=4&y=6");
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("4 - 6 = -2"));
+	}
+
+	@Test
+	public void testGetMathCalculateDivide() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.get("/math/calculate?operation=divide&x=30&y=5");
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("30 / 5 = 6"));
 	}
 
 }
