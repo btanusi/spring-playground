@@ -52,4 +52,10 @@ class DemoApplicationTests {
 		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("30 / 5 = 6"));
 	}
 
+	@Test
+	public void testGetMathCalculateGivenXandY() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.get("/math/calculate?x=30&y=5");
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("30 + 5 = 35"));
+	}
+
 }
