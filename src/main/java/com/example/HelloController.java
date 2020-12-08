@@ -83,22 +83,33 @@ public class HelloController {
 
     @PostMapping("/math/area")
     public String postMathArea(@RequestParam Map<String, String> body) {
-        String retType, retArea;
-        Double area;
+        String retType = "Invalid";
         String type = body.get("type");
-        //if(type.equals("circle")){
+        if(type.equals("circle")){
             String radius = body.get("radius");
             if(radius == null){
-                return "Invalid";
+                return retType;
             } else {
                 Integer r = Integer.parseInt(radius);
-                area = (Double.parseDouble(getPi()) * r * r);
+                Double area = (Double.parseDouble(getPi()) * r * r);
                 area = Math.round(area * 100000.0) / 100000.0;
-                retType = "circle with a radius of " + radius;
-                retArea = area.toString();
+                return "Area of a circle with a radius of " + radius + " is " + area.toString();
             }
-        //}
-        return "Area of a " + retType + " is " + retArea;
+        } else if (type.equals("rectangle")){
+            String width = body.get("width");
+            String height = body.get("height");
+            if(width == null || height == null){
+                return retType;
+            } else {
+                Integer w = Integer.parseInt(width);
+                Integer h = Integer.parseInt(height);
+                Integer area = w * h;
+                return "Area of a " + w.toString() + "x" + h.toString() + " rectangle is " + area.toString();
+            }
+
+        } else {
+            return retType;
+        }
     }
 
 }
