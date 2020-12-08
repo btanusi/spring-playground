@@ -58,7 +58,7 @@ public class HelloController {
     }
 
     @GetMapping("/math/sum")
-    public String getMathCalculate(@RequestParam MultiValueMap<String, String> params) {
+    public String getMathSum(@RequestParam MultiValueMap<String, String> params) {
         Integer sum = 0;
         String retStr = "";
         Collection<List<String>> values = params.values();
