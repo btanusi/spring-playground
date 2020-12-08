@@ -35,7 +35,7 @@ public class HelloController {
     }
 
     @GetMapping("/math/calculate")
-    public String getMathCalculate(@RequestParam String operation, @RequestParam Integer x, @RequestParam Integer y) {
+    public String getMathCalculate(@RequestParam(defaultValue = "add") String operation, @RequestParam Integer x, @RequestParam Integer y) {
         Integer result = 0;
         if(operation.equals("add")){
             operation = "+";
