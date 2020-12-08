@@ -93,4 +93,15 @@ class DemoApplicationTests {
 		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("Area of a circle with a radius of 4 is 50.26548"));
 	}
 
+	@Test
+	public void testMathAreaRectangle() throws Exception {
+		RequestBuilder request = MockMvcRequestBuilders.post("/math/area")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("type", "rectangle")
+				.param("width", "4")
+				.param("height", "7");
+		;
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("Area of a 4x7 rectangle is 28"));
+	}
+
 }
