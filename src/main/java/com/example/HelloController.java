@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
@@ -161,7 +162,7 @@ public class HelloController {
         @JsonProperty("Departs")
         public Date getDeparts(){ return departs; }
         public void setDeparts(Date departs){ this.departs = departs; }
-        @JsonProperty("Tickets")
+        //@JsonProperty("Tickets")
         public Ticket[] getTickets() { return tickets; }
         public void setTickets(Ticket[] tickets) { this.tickets = tickets; }
     }
@@ -169,10 +170,10 @@ public class HelloController {
     public static class Ticket {
         private Passenger passenger;
         private Integer price;
-        @JsonProperty("Passenger")
+        //@JsonProperty("Passenger")
         public Passenger getPassenger(){ return passenger; }
         public void setPassenger(Passenger passenger) { this.passenger = passenger; }
-        @JsonProperty("Price")
+        //@JsonProperty("Price")
         public Integer getPrice(){ return price; }
         public void setPrice(Integer price){ this.price = price; }
     }
@@ -181,12 +182,24 @@ public class HelloController {
     public static class Passenger {
         private String firstName;
         private String lastName;
-        @JsonProperty("FirstName")
+        //@JsonProperty("FirstName")
         public String getFirstName() { return firstName; }
         public void setFirstName(String firstName) { this.firstName = firstName; }
-        @JsonProperty("LastName")
+        //@JsonProperty("LastName")
         public String getLastName() { return lastName; }
         public void setLastName(String lastName) { this.lastName = lastName; }
+    }
+
+    @PostMapping("/flights/tickets/total")
+    public Map<String, Integer> ticketTotal(@RequestBody Flight flight){
+        Ticket[] tickets = flight.getTickets();
+        Integer acc = 0;
+        for(Ticket t : tickets){
+            acc += t.getPrice();
+        }
+        Map<String, Integer> json = new HashMap<String, Integer>();
+        json.put("result", acc);
+        return json;
     }
 
 }

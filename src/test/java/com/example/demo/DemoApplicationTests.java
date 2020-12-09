@@ -1,5 +1,9 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import org.junit.jupiter.api.Test;
@@ -8,10 +12,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,7 +34,7 @@ class DemoApplicationTests {
 
 	@Autowired
 	private MockMvc mvc;
-
+/*
 	@Test
 	public void testIndexEndpoint() throws Exception {
 		RequestBuilder request = MockMvcRequestBuilders.get("/hello");
@@ -80,7 +91,7 @@ class DemoApplicationTests {
 
 	@Test
 	public void testPostMathVolume() throws Exception {
-		RequestBuilder request = MockMvcRequestBuilders.post("/math/volume/3/4/5");
+		RequestBuilder request = post("/math/volume/3/4/5");
 		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("The volume of a 3x4x5 rectangle is 60"));
 	}
 
@@ -92,7 +103,7 @@ class DemoApplicationTests {
 
 	@Test
 	public void testMathAreaCircle() throws Exception {
-		RequestBuilder request = MockMvcRequestBuilders.post("/math/area")
+		RequestBuilder request = post("/math/area")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("type", "circle")
 				.param("radius", "4");
@@ -102,7 +113,7 @@ class DemoApplicationTests {
 
 	@Test
 	public void testMathAreaRectangle() throws Exception {
-		RequestBuilder request = MockMvcRequestBuilders.post("/math/area")
+		RequestBuilder request = post("/math/area")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("type", "rectangle")
 				.param("width", "4")
@@ -157,7 +168,7 @@ class DemoApplicationTests {
 				//.andExpect(jsonPath("$[1].tickets[0].passenger.lastName", is(null)))
 				.andExpect(jsonPath("$[1].tickets[0].price", is(400)));
 	}
-	*/
+
 	@Test
 	public void refactedTestListOfFlights() throws Exception {
 		this.mvc.perform(
@@ -173,6 +184,83 @@ class DemoApplicationTests {
 				.andExpect(jsonPath("$[1].Departs", is("2017-04-21 14:34")))
 				.andExpect(jsonPath("$[1].Tickets[0].Passenger.FirstName", is("Some other name")))
 				.andExpect(jsonPath("$[1].Tickets[0].Price", is(400)));
+	}
+*/
+	//POST request to /flights/tickets/total
+	@Test
+	public void testTotalWithString() throws Exception {
+		String json = "{\"tickets\":[{\"passenger\":{\"firstName\":\"Some name\",\"lastName\":\"Some other name\"},\"price\":200},{\"passenger\":{\"firstName\":\"Name B\",\"lastName\":\"Name C\"},\"price\":150}]}";
+
+		MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json);
+
+		this.mvc.perform(request)
+				.andExpect(status().isOk())
+				.andExpect(content().string("{\"result\":350}"));
+	}
+
+
+	ObjectMapper objectMapper = new ObjectMapper();                    // 1
+
+	@Test
+	public void testTotalWithJackson() throws Exception {
+		HashMap<String, Object> p1 = new HashMap<String, Object>(){  // 2
+			{
+				put("firstName", "Some name");
+				put("lastName", "Some other name");
+			}
+		};
+		HashMap<String, Object> p2 = new HashMap<String, Object>(){  // 2
+			{
+				put("firstName", "Name B");
+				put("lastName", "Name C");
+			}
+		};
+		HashMap<String, Object> t1 = new HashMap<String, Object>(){  // 2
+			{
+				put("passenger", p1);
+				put("price", 200);
+			}
+		};
+		HashMap<String, Object> t2 = new HashMap<String, Object>(){  // 2
+			{
+				put("passenger", p2);
+				put("price", 150);
+			}
+		};
+		HashMap<String, Object> tickets = new HashMap<String, Object>(){  // 2
+			{
+				put("tickets", Arrays.asList(t1, t2));
+			}
+		};
+
+		String json = objectMapper.writeValueAsString(tickets);            // 3
+
+		MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json);                                         // 4
+
+		this.mvc.perform(request).andExpect(status().isOk());
+	}
+
+
+	@Test
+	public void testTotalWithFileFixture() throws Exception {
+		String json = getJSON("/ticketTotalData.json");
+
+		MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json);
+
+		this.mvc.perform(request)
+				.andExpect(status().isOk())
+				.andExpect(content().string("{\"result\":350}"));
+	}
+
+	private String getJSON(String path) throws Exception {
+		URL url = this.getClass().getResource(path);
+		return new String(Files.readAllBytes(Paths.get(url.getFile())));
 	}
 
 }
