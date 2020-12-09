@@ -241,7 +241,7 @@ class DemoApplicationTests {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json);                                         // 4
 
-		this.mvc.perform(request).andExpect(status().isOk());
+		this.mvc.perform(request).andExpect(status().isOk()).andExpect(content().string("{\"result\":350}"));;
 	}
 
 
